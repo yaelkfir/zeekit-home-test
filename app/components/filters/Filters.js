@@ -18,8 +18,6 @@ class Filters extends React.Component {
 
   componentDidMount() {
 
-    console.info(this.props.theProps.match.params);
-
     if (this.props.theProps.match.params.query !== undefined) {
 
       if (this.props.theProps.match.params.region !== undefined && this.props.theProps.match.params.lang !== undefined) {
@@ -90,8 +88,6 @@ class Filters extends React.Component {
       else {
         resultsData = appData;
       }
-
-      console.info('ResultsData', resultsData);
 
       this.props.setResults(resultsData);
 

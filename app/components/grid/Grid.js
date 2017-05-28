@@ -30,7 +30,7 @@ componentWillMount(){
 
     xhr.addEventListener('load', () => {
       let appData = JSON.parse(xhr.responseText);
-      console.info('appData',appData);
+
       this.props.setResults(appData)
     });
 
