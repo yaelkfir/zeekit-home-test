@@ -14,7 +14,7 @@ class Content extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="content-container">
         <Filters theProps={this.props.theProps}/>
         <Grid theProps={this.props.theProps}/>
       </div>

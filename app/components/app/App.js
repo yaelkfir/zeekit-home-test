@@ -11,11 +11,10 @@ export default class Root extends React.Component {
   render() {
     return (
       <div>
-        <h1>zeekit test</h1>
+        <h1>Country Searcher</h1>
         <MainSearch theProps={this.props}/>
         <Content theProps={this.props}/>
       </div>
     );
   }
-
 };

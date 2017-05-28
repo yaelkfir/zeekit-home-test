@@ -30,8 +30,8 @@ componentWillMount(){
 
     xhr.addEventListener('load', () => {
       let appData = JSON.parse(xhr.responseText);
+      console.info('appData',appData);
       this.props.setResults(appData)
-
     });
 
     xhr.addEventListener('error', () => {
@@ -42,27 +42,43 @@ componentWillMount(){
 
   }
 
+  checkborders(borders){
+    if(borders.length === 0 ){
+      return null;
+    }
+    else{
+      return(
+<div>
+  <h5>borders:</h5>
+  <ul>
+    { borders.map((border)=> <li key={uuid()} className="border">{border}</li>)}
+  </ul>
+</div>
+      );
+    }
+  }
 
   render() {
     if (this.props.searchData.length === 0) {
       return (
         <div>
-          <span>results</span>
+        </div>    );
+    }
+    if(this.props.searchData.status){
+      return (
+        <div>
+          <span>nothing was found</span>
         </div>    );
     }
     else {
-
       return (
         <div>
           <ul>
-            {this.props.searchData.map((country)=><li key={uuid()}>
+            {this.props.searchData.map((country)=><li key={uuid()} className="country-container">
               <h4>{country.name}</h4>
-              <h5>borders:</h5>
-              <ul>
-                {country.borders.map((border)=> <li key={uuid()}>{border}</li>)}
-              </ul>
-
-              <sapn>population: {country.population}</sapn>
+              {this.checkborders(country.borders)}
+              <h5>population:</h5>
+              <sapn>{country.population}</sapn>
             </li>)}
           </ul>
         </div>

@@ -31,14 +31,14 @@ componentDidMount(){
 
   render() {
     return (
-      <div>
+      <div className="search-container">
         <span className="fa fa-search" aria-hidden="true" onClick={(e) => this.searchSubmit(e)}/>
         <form onSubmit={(e) => this.searchSubmit(e)}>
           <input
             ref={(ref) => this.searchInput = ref}
             className="search"
             type="search"
-            placeholder="search"
+            placeholder="search country"
           />
           <button onClick={(e) => this.searchSubmit(e)}>search</button>
         </form>

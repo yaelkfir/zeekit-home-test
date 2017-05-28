@@ -55,7 +55,6 @@ class Filters extends React.Component {
   }
 
   GetXhrAllFilters(searchQuery, region, lang) {
-    console.info('GetXhrAllFilters');
 
     const xhr = new XMLHttpRequest();
 
@@ -67,21 +66,31 @@ class Filters extends React.Component {
       let tempLang = ISO6391.getCode(`${lang}`);
       let tempResultsData = [];
       let resultsData = [];
-
-      for (const country of appData) {
-        if (country.region === region && country.languages) {
-          tempResultsData.push(country);
+      if (region !== 'all') {
+        for (const country of appData) {
+          if (country.region === region) {
+            tempResultsData.push(country);
+          }
         }
       }
-
-      for (const country of tempResultsData) {
-        for (const languages of country.languages)
-
-          if (languages.iso639_1 === tempLang) {
-
-            resultsData.push(country);
-          }
+      else {
+        tempResultsData = appData;
       }
+
+      if (lang !== 'all') {
+        for (const country of tempResultsData) {
+          for (const languages of country.languages)
+
+            if (languages.iso639_1 === tempLang) {
+
+              resultsData.push(country);
+            }
+        }
+      }
+      else {
+        resultsData = appData;
+      }
+
       console.info('ResultsData', resultsData);
 
       this.props.setResults(resultsData);
@@ -155,12 +164,15 @@ class Filters extends React.Component {
 
     if (this.props.theProps.match.params.lang === undefined) {
       this.props.theProps.history.push(`/search/${this.props.theProps.match.params.query}/region/${e.target.value}`);
+
+      this.GetXhrFilter(this.props.theProps.match.params.query, e.target.value, e.target.name);
+
     }
     else {
       this.props.theProps.history.push(`/search/${this.props.theProps.match.params.query}/lang/${this.props.theProps.match.params.lang}/region/${e.target.value}`);
+      this.GetXhrAllFilters(this.props.theProps.match.params.query, e.target.value, this.props.theProps.match.params.lang);
     }
 
-    this.GetXhrFilter(this.props.theProps.match.params.query, e.target.value, e.target.name);
     this.setState({valueRegion: e.target.value})
 
   }
@@ -169,37 +181,45 @@ class Filters extends React.Component {
     if (this.props.theProps.match.params.region !== undefined) {
 
       this.props.theProps.history.push(`/search/${this.props.theProps.match.params.query}/region/${this.props.theProps.match.params.region}/lang/${e.target.value}`);
+      this.GetXhrAllFilters(this.props.theProps.match.params.query, this.props.theProps.match.params.region, e.target.value);
     }
 
     else {
       this.props.theProps.history.push(`/search/${this.props.theProps.match.params.query}/lang/${e.target.value}`);
+      this.GetXhrFilter(this.props.theProps.match.params.query, e.target.value, e.target.name)
+
     }
 
     this.setState({valueLang: e.target.value});
-    this.GetXhrFilter(this.props.theProps.match.params.query, e.target.value, e.target.name)
 
   }
 
   render() {
-    return (
-      <div>
-        <select name="Regions" value={this.state.valueRegion} onChange={(e) => {
-          this.filterByRegion(e)
-        }}>
-          <option className="Region" value="all">all</option>
-          <option className="Region" value="Africa">Africa</option>
-          <option className="Region" value="Americas">Americas</option>
-          <option className="Region" value="Asia">Asia</option>
-          <option className="Region" value="Oceania">Oceania</option>
-        </select>
-        <select name="language" value={this.state.valueLang} onChange={(e) => {
-          this.filterByLang(e)
-        }}>
-          <option value="all">all</option>
-          {ISO6391.getAllNames().map((lang) => <option key={uuid()} value={`${lang}`}>{lang}</option>)}
-        </select>
-      </div>
-    );
+    if (this.props.theProps.match.params.query) {
+      return (
+        <div>
+          <h2>results for "{this.props.theProps.match.params.query}"</h2>
+          <select name="Regions" value={this.state.valueRegion} onChange={(e) => {
+            this.filterByRegion(e)
+          }}>
+            <option className="Region" value="all">All Regions</option>
+            <option className="Region" value="Africa">Africa</option>
+            <option className="Region" value="Americas">Americas</option>
+            <option className="Region" value="Asia">Asia</option>
+            <option className="Region" value="Oceania">Oceania</option>
+          </select>
+          <select name="language" value={this.state.valueLang} onChange={(e) => {
+            this.filterByLang(e)
+          }}>
+            <option value="all">All Language</option>
+            {ISO6391.getAllNames().map((lang) => <option key={uuid()} value={`${lang}`}>{lang}</option>)}
+          </select>
+        </div>);
+    }
+
+    else {
+      return null;
+    }
   }
 }
 
